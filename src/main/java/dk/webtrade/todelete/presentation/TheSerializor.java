@@ -20,5 +20,8 @@ public class TheSerializor {
     public static void main(String[] args) {
          DF.populate();
         DF.getAllAddresses().forEach((el)->System.out.println(el));
-        System.out.println(gson.toJson(DF.getAllAddresses()));
+//        System.out.println(gson.toJson(DF.getAllAddresses())); BAD CALL
+        System.out.println(gson.toJson(DF.getCustomersForSerialization()));  // GOOD CALL
+        
+        
     }}

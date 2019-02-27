@@ -7,6 +7,7 @@ package dk.webtrade.todelete.data;
 
 import dk.webtrade.todelete.entity.Address;
 import dk.webtrade.todelete.entity.Customer;
+import dk.webtrade.todelete.entity.dto.CustomerDTO;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -27,14 +28,20 @@ public class DataFacade {
     public Customer getCustomerById(int id) {
         return getManager().find(Customer.class, id);
     }
-    public List<Address> getAllAddresses(){
+
+    public List<Address> getAllAddresses() {
         EntityManager em = getManager();
         return em.createQuery("SELECT a FROM Address a").getResultList();
     }
-    
-    public List<Customer> getAllCustomers(){
+
+    public List<Customer> getAllCustomers() {
         EntityManager em = getManager();
         return em.createQuery("SELECT c FROM Customer c").getResultList();
+    }
+
+    public List<CustomerDTO> getCustomersForSerialization() {
+        EntityManager em = getManager();
+        return em.createQuery("SELECT NEW dk.webtrade.todelete.entity.dto.CustomerDTO(c.firstname, c.lastname, c.age, c.address) FROM Customer c").getResultList();
     }
 
     public Customer createCustomer(Customer c) {
@@ -48,19 +55,20 @@ public class DataFacade {
         }
         return c;
     }
-    public void createAddress(Address a ){
+
+    public void createAddress(Address a) {
         EntityManager em = getManager();
         try {
             em.getTransaction().begin();
-            
+
             em.merge(a);
-            
-            
+
             em.getTransaction().commit();
         } finally {
             em.close();
         }
     }
+
     public void populate() {
         System.out.println("populate");
         DataFacade df = new DataFacade();
@@ -69,11 +77,11 @@ public class DataFacade {
         Customer c3 = new Customer("Hassan", "Albertsen", 23);
         Customer c4 = new Customer("Harun", "Albertsen", 23);
         Customer c5 = new Customer("Hugin", "Albertsen", 23);
-        
+
         Address a1 = new Address("strandvej", 230, "3050");
         Address a2 = new Address("østerbrogade", 132, "2100");
         Address a3 = new Address("versterfælledvej", 15, "1732");
-        
+
         c1.setAddress(a1);
         c2.setAddress(a1);
         c3.setAddress(a2);
@@ -83,5 +91,11 @@ public class DataFacade {
         df.createAddress(a1);
         df.createAddress(a2);
         df.createAddress(a3);
+    }
+
+    public static void main(String[] args) {
+        DataFacade df = new DataFacade();
+        df.populate();
+        df.getCustomersForSerialization().forEach((c) -> System.out.println(c));
     }
 }

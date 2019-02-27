@@ -123,7 +123,7 @@ public class Address implements Serializable {
 
     @Override
     public String toString() {
-        return "dk.webtrade.todelete.entity.Address[ id=" + id + " ]";
+        return this.street+" "+this.no+", "+this.zip;
     }
     
 }
