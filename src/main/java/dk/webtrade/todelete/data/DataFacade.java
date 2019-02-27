@@ -7,6 +7,7 @@ package dk.webtrade.todelete.data;
 
 import dk.webtrade.todelete.entity.Address;
 import dk.webtrade.todelete.entity.Customer;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -25,6 +26,15 @@ public class DataFacade {
 
     public Customer getCustomerById(int id) {
         return getManager().find(Customer.class, id);
+    }
+    public List<Address> getAllAddresses(){
+        EntityManager em = getManager();
+        return em.createQuery("SELECT a FROM Address a").getResultList();
+    }
+    
+    public List<Customer> getAllCustomers(){
+        EntityManager em = getManager();
+        return em.createQuery("SELECT c FROM Customer c").getResultList();
     }
 
     public Customer createCustomer(Customer c) {
@@ -51,7 +61,8 @@ public class DataFacade {
             em.close();
         }
     }
-    public static void populate() {
+    public void populate() {
+        System.out.println("populate");
         DataFacade df = new DataFacade();
         Customer c1 = new Customer("Henriette", "Albertsen", 23);
         Customer c2 = new Customer("Hans", "Albertsen", 23);
